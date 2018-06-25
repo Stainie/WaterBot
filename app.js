@@ -12,6 +12,10 @@ app.use(bodyParser.urlencoded({ 'extended': false }));    // parse application/x
 app.use(bodyParser.json());                             // parse application/json from body
 
 /* ----- Routes ----- */
+app.get('/', (req, res) => {
+    res.send('Herro Heroku');
+});
+
 app.get('/webhook', (req, res) => {
 
     let VERIFY_TOKEN = "stankos_verification_token";
