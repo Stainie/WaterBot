@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-app.get('/', (req, res, next) => {
+router.get('/', (req, res, next) => {
     console.log('Heroku');
     res.send('Heroku');
 });
 
-app.get('/webhook', (req, res, next) => {
+router.get('/webhook', (req, res, next) => {
 
     let VERIFY_TOKEN = "stankos_verification_token";
 
@@ -26,3 +26,5 @@ app.get('/webhook', (req, res, next) => {
         }
     }
 });
+
+module.exports = router;
