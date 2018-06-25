@@ -5,8 +5,10 @@
   "main": "mainserver.js",
   "scripts": {
     "babel": "babel",
-    "start": "nodemon mainserver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node" : "9.5.0"
   },
   "repository": {
     "type": "git",

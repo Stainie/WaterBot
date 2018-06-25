@@ -12,11 +12,12 @@ app.use(bodyParser.urlencoded({ 'extended': false }));    // parse application/x
 app.use(bodyParser.json());                             // parse application/json from body
 
 /* ----- Routes ----- */
-app.get('/', (req, res) => {
-    res.send('Herro Heroku');
+app.get('/', (req, res, next) => {
+    console.log('Heroku');
+    res.send('Heroku');
 });
 
-app.get('/webhook', (req, res) => {
+app.get('/webhook', (req, res, next) => {
 
     let VERIFY_TOKEN = "stankos_verification_token";
 
@@ -35,6 +36,19 @@ app.get('/webhook', (req, res) => {
             res.sendStatus(403);
         }
     }
+});
+
+app.use((req, res, next) => {
+    const error = new Error('Not found');
+    error.status = 404;
+    next(error);
+});
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        message: error.message
+    });
 });
 
 module.exports = app;
