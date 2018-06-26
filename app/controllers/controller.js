@@ -22,4 +22,7 @@ exports.getWebHook = (req, res, next) => {
             res.sendStatus(403);
         }
     }
+    else {
+        res.send('no entry');
+    }
 };
