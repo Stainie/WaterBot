@@ -4,6 +4,8 @@ const controller = require('../controllers/controller');
 
 router.get('/', controller.test);
 
-router.get('/webhook', controller.getWebHook);
+router.get('/webhook', controller.getWebhook);
+
+router.post('/webhook', controller.postWebhook);
 
 module.exports = router;
