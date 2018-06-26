@@ -43,13 +43,12 @@ exports.postWebhook = (req, res, next) => {
 
             // Gets the body of the webhook event
             let webhook_event = entry.messaging[0];
-            console.log('COMING WEBHOOK EVENT IS: ' + webhook_event);
-
 
             // Get the sender PSID
             let sender_psid = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
 
+            getStarted();
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
@@ -66,6 +65,19 @@ exports.postWebhook = (req, res, next) => {
     } else {
         // Return a '404 Not Found' if event is not from a page subscription
         res.sendStatus(404);
+    }
+
+    function getStarted() {
+        request({
+            url: 'https://graph.facebook.com/v2.6/me/messenger_profile',
+            qs: { access_token: ACCESS_TOKEN },
+            method: 'POST',
+            json: {
+                "get_started": {
+                    "payload": "GET_STARTED_PAYLOAD"
+                }
+            }
+        });
     }
 
     function handleMessage(sender_psid, received_message) {
