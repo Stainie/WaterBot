@@ -46,16 +46,15 @@ exports.postWebhook = (req, res, next) => {
 
             // Get the sender PSID
             let sender_psid = webhook_event.sender.id;
-            let sender_name = webhook_event.sender.first_name;
 
             console.log('Sender PSID: ' + sender_psid);
 
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
-                handleMessage(sender_psid, sender_name, webhook_event.message);
+                handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
-                handlePostback(sender_psid, sender_name, webhook_event.postback);
+                handlePostback(sender_psid, webhook_event.postback);
             }
 
         });
@@ -68,7 +67,7 @@ exports.postWebhook = (req, res, next) => {
         res.sendStatus(404);
     }
 
-    function handleMessage(sender_psid, sender_name, received_message) {
+    function handleMessage(sender_psid, received_message) {
         let response;
 
         // Checks if the message contains text
@@ -112,7 +111,7 @@ exports.postWebhook = (req, res, next) => {
         callSendAPI(sender_psid, response);
     }
 
-    function handlePostback(sender_psid, sender_name, received_postback) {
+    function handlePostback(sender_psid, received_postback) {
         let response;
 
         // Get the payload for the postback
@@ -125,7 +124,20 @@ exports.postWebhook = (req, res, next) => {
             response = { "text": "Oops, try sending another image." };
         }
         else if (payload == 'GET_STARTED_PAYLOAD') {
-            response = { "text": "Hi " + sender_name + "! I will be your personal water trainer :) you can call me Nada Macura" };
+
+            getUserName = function (res, convo) {
+                var usersPublicProfile = 'https://graph.facebook.com/v2.6/' + res.user + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN;
+                request({
+                    url: usersPublicProfile,
+                    json: true // parse
+                }, function (error, response, body) {
+                    if (!error && response.statusCode === 200) {
+                        //convo.say('Hi ' + body.first_name);
+                        response = { "text": "Hi " + body.first_name + " !I will be your personal water trainer :) you can call me Nada Macura" };
+                    }
+                });
+            };
+
         }
         // Send the message to acknowledge the postback
         callSendAPI(sender_psid, response);
@@ -137,6 +149,7 @@ exports.postWebhook = (req, res, next) => {
             "recipient": {
                 "id": sender_psid
             },
+            "sender_action": "typing_on",
             "message": response
         };
 
