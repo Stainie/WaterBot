@@ -125,15 +125,19 @@ exports.postWebhook = (req, res, next) => {
         }
         else if (payload == 'GET_STARTED_PAYLOAD') {
 
-            getUserName = function (res, convo) {
-                var usersPublicProfile = 'https://graph.facebook.com/v2.6/' + res.user + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN;
+            getUserName = function () {
+                var usersPublicProfile = 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN;
                 request({
                     url: usersPublicProfile,
                     json: true // parse
-                }, function (error, response, body) {
-                    if (!error && response.statusCode === 200) {
+                }, function (error, res, body) {
+                    if (!error) {
                         //convo.say('Hi ' + body.first_name);
+                        console.log("SUCCESS");
                         response = { "text": "Hi " + body.first_name + " !I will be your personal water trainer :) you can call me Nada Macura" };
+                    }
+                    else {
+                        console.log('Error: ' + error);
                     }
                 });
             };
