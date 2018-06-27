@@ -138,7 +138,7 @@ exports.postWebhook = (req, res, next) => {
                     console.log('Error: ' + error);
                 }
             });
-            response = { "text": "Hejj!" };
+            response = { "text": "Hejj! " + bodyObj.first_name};
             //response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
         }
         // Send the message to acknowledge the postback
