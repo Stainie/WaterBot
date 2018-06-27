@@ -121,26 +121,26 @@ exports.postWebhook = (req, res, next) => {
         } else if (payload === 'no') {
             response = { "text": "Oops, try sending another image." };
         }
-        // else if (payload == 'GET_STARTED_PAYLOAD') {
+        else if (payload == 'GET_STARTED_PAYLOAD') {
 
-        //     request({
-        //         "uri": 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN,
-        //         "method": "GET",
-        //     }, (error, res, body) => {
-        //         if (!error && res.statusCode == 200) {
-        //             //convo.say('Hi ' + body.first_name);
-        //             let bodyObj = JSON.parse(body);
+            request({
+                "uri": 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN,
+                "method": "GET",
+            }, (error, res, body) => {
+                if (!error && res.statusCode == 200) {
+                    //convo.say('Hi ' + body.first_name);
+                    let bodyObj = JSON.parse(body);
 
-        //             console.log("SUCCESS: " + bodyObj.first_name);
-        //             response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
-        //         }
-        //         else {
-        //             console.log('Error: ' + error);
-        //             response = { "text": "Error" };
-        //         }
-        //     });
+                    console.log("SUCCESS: " + bodyObj.first_name);
+                    response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
+                }
+                else {
+                    console.log('Error: ' + error);
+                    response = { "text": "Error" };
+                }
+            });
 
-        // }
+        }
         else {
             response = { "text": "Hejj!" };
         }
