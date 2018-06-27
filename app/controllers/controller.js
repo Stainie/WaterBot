@@ -141,6 +141,9 @@ exports.postWebhook = (req, res, next) => {
         //     });
 
         // }
+        else {
+            response = { "text": "Hejj!" };
+        }
         // Send the message to acknowledge the postback
         callSendAPI(sender_psid, response);
     }
@@ -151,7 +154,6 @@ exports.postWebhook = (req, res, next) => {
             "recipient": {
                 "id": sender_psid
             },
-            "sender_action": "typing_on",
             "message": response
         };
 
