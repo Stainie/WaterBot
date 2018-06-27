@@ -48,7 +48,7 @@ exports.postWebhook = (req, res, next) => {
             let sender_psid = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
 
-            getStarted();
+            // getStarted();
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
@@ -67,18 +67,18 @@ exports.postWebhook = (req, res, next) => {
         res.sendStatus(404);
     }
 
-    function getStarted() {
-        request({
-            url: 'https://graph.facebook.com/v2.6/me/messenger_profile',
-            qs: { access_token: ACCESS_TOKEN },
-            method: 'POST',
-            json: {
-                "get_started": {
-                    "payload": "GET_STARTED_PAYLOAD"
-                }
-            }
-        });
-    }
+    // function getStarted() {
+    //     request({
+    //         url: 'https://graph.facebook.com/v2.6/me/messenger_profile',
+    //         qs: { access_token: ACCESS_TOKEN },
+    //         method: 'POST',
+    //         json: {
+    //             "get_started": {
+    //                 "payload": "GET_STARTED_PAYLOAD"
+    //             }
+    //         }
+    //     });
+    // }
 
     function handleMessage(sender_psid, received_message) {
         let response;
@@ -135,6 +135,10 @@ exports.postWebhook = (req, res, next) => {
             response = { "text": "Thanks!" };
         } else if (payload === 'no') {
             response = { "text": "Oops, try sending another image." };
+        }
+        else {
+            console.log('payload: ' + payload);
+            response = {"text": "Krenimo sa casom vode bejbe"};
         }
         // Send the message to acknowledge the postback
         callSendAPI(sender_psid, response);
