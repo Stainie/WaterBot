@@ -141,9 +141,6 @@ exports.postWebhook = (req, res, next) => {
             response = { "text": "Hejj!" };
             //response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
         }
-        else {
-            response = { "text": "Hejj!" };
-        }
         // Send the message to acknowledge the postback
         callSendAPI(sender_psid, response);
     }
