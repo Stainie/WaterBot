@@ -131,8 +131,10 @@ exports.postWebhook = (req, res, next) => {
             }, (error, res, body) => {
                 if (!error && res.statusCode == 200) {
                     //convo.say('Hi ' + body.first_name);
-                    console.log("SUCCESS: " + body.first_name);
-                    response = { "text": "Hi " + body.first_name + " !I will be your personal water trainer :) you can call me Nada Macura" };
+                    let bodyObj = JSON.parse(body);
+
+                    console.log("SUCCESS: " + bodyObj.first_name);
+                    response = { "text": "Hi "  + " !I will be your personal water trainer :) you can call me Nada Macura" };
                 }
                 else {
                     console.log('Error: ' + error);
