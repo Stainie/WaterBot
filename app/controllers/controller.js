@@ -114,6 +114,7 @@ exports.postWebhook = (req, res, next) => {
 
         // Get the payload for the postback
         let payload = received_postback.payload;
+        let bodyObj;
 
         // Set the response based on the postback payload
         if (payload === 'yes') {
@@ -129,10 +130,9 @@ exports.postWebhook = (req, res, next) => {
             }, (error, res, body) => {
                 if (!error && res.statusCode == 200) {
                     //convo.say('Hi ' + body.first_name);
-                    let bodyObj = JSON.parse(body);
+                    bodyObj = JSON.parse(body);
 
                     console.log("SUCCESS: " + bodyObj.first_name);
-                    response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
                 }
                 else {
                     console.log('Error: ' + error);
@@ -140,6 +140,7 @@ exports.postWebhook = (req, res, next) => {
                 }
             });
 
+            response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
         }
         else {
             response = { "text": "Hejj!" };
