@@ -122,7 +122,7 @@ exports.postWebhook = (req, res, next) => {
         } else if (payload === 'no') {
             response = { "text": "Oops, try sending another image." };
         }
-        else if (payload == 'GET_STARTED_PAYLOAD') {
+        else if (payload === 'GET_STARTED_PAYLOAD') {
 
             request({
                 "uri": 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN,
@@ -136,11 +136,10 @@ exports.postWebhook = (req, res, next) => {
                 }
                 else {
                     console.log('Error: ' + error);
-                    response = { "text": "Error" };
                 }
             });
-
-            response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
+            response = { "text": "Hejj!" };
+            //response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
         }
         else {
             response = { "text": "Hejj!" };
