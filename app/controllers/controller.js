@@ -46,15 +46,16 @@ exports.postWebhook = (req, res, next) => {
 
             // Get the sender PSID
             let sender_psid = webhook_event.sender.id;
+            let sender_name = webhook_event.sender.first_name;
+
             console.log('Sender PSID: ' + sender_psid);
 
-            // getStarted();
             // Check if the event is a message or postback and
             // pass the event to the appropriate handler function
             if (webhook_event.message) {
-                handleMessage(sender_psid, webhook_event.message);
+                handleMessage(sender_psid, sender_name, webhook_event.message);
             } else if (webhook_event.postback) {
-                handlePostback(sender_psid, webhook_event.postback);
+                handlePostback(sender_psid, sender_name, webhook_event.postback);
             }
 
         });
@@ -67,20 +68,7 @@ exports.postWebhook = (req, res, next) => {
         res.sendStatus(404);
     }
 
-    // function getStarted() {
-    //     request({
-    //         url: 'https://graph.facebook.com/v2.6/me/messenger_profile',
-    //         qs: { access_token: ACCESS_TOKEN },
-    //         method: 'POST',
-    //         json: {
-    //             "get_started": {
-    //                 "payload": "GET_STARTED_PAYLOAD"
-    //             }
-    //         }
-    //     });
-    // }
-
-    function handleMessage(sender_psid, received_message) {
+    function handleMessage(sender_psid, sender_name, received_message) {
         let response;
 
         // Checks if the message contains text
@@ -124,7 +112,7 @@ exports.postWebhook = (req, res, next) => {
         callSendAPI(sender_psid, response);
     }
 
-    function handlePostback(sender_psid, received_postback) {
+    function handlePostback(sender_psid, sender_name, received_postback) {
         let response;
 
         // Get the payload for the postback
@@ -136,9 +124,8 @@ exports.postWebhook = (req, res, next) => {
         } else if (payload === 'no') {
             response = { "text": "Oops, try sending another image." };
         }
-        else {
-            console.log('payload: ' + payload);
-            response = {"text": "Krenimo sa casom vode bejbe"};
+        else if (payload == 'GET_STARTED_PAYLOAD') {
+            response = { "text": "Hi " + sender_name + "! I will be your personal water trainer :) you can call me Nada Macura" };
         }
         // Send the message to acknowledge the postback
         callSendAPI(sender_psid, response);
