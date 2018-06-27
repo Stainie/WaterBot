@@ -119,8 +119,11 @@ exports.postWebhook = (req, res, next) => {
         // Set the response based on the postback payload
         if (payload === 'yes') {
             response = { "text": "Thanks!" };
+            callSendAPI(sender_psid, response);
+
         } else if (payload === 'no') {
             response = { "text": "Oops, try sending another image." };
+            callSendAPI(sender_psid, response);
         }
         else if (payload === 'GET_STARTED_PAYLOAD') {
 
@@ -129,21 +132,18 @@ exports.postWebhook = (req, res, next) => {
                 "method": "GET",
             }, (error, res, body) => {
                 if (!error && res.statusCode == 200) {
-                    //convo.say('Hi ' + body.first_name);
                     bodyObj = JSON.parse(body);
+                    response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
 
                     console.log("SUCCESS: " + bodyObj.first_name);
+
+                    callSendAPI(sender_psid, response);
                 }
                 else {
                     console.log('Error: ' + error);
                 }
             });
-            console.log("RESPONSE FROM PAYLOAD: " + bodyObj.first_name);
-            response = { "text": "Thanks!" };
-            //response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
         }
-        // Send the message to acknowledge the postback
-        callSendAPI(sender_psid, response);
     }
 
     function callSendAPI(sender_psid, response) {
