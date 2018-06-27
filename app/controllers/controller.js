@@ -125,11 +125,10 @@ exports.postWebhook = (req, res, next) => {
         }
         else if (payload == 'GET_STARTED_PAYLOAD') {
 
-            let usersPublicProfile = 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN;
             request({
-                url: usersPublicProfile,
-                json: true // parse
-            }, function (error, res, body) {
+                "uri": 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN,
+                "method": "GET",
+            }, (error, res, body) => {
                 if (!error) {
                     //convo.say('Hi ' + body.first_name);
                     console.log("SUCCESS");
@@ -137,7 +136,7 @@ exports.postWebhook = (req, res, next) => {
                 }
                 else {
                     console.log('Error: ' + error);
-                    response = {"text": "Error"};
+                    response = { "text": "Error" };
                 }
             });
 
