@@ -138,7 +138,7 @@ exports.postWebhook = (req, res, next) => {
                     console.log('Error: ' + error);
                 }
             });
-            console.log("RESPONSE FROM PAYLOAD: ");
+            console.log("RESPONSE FROM PAYLOAD: " + bodyObj.first_name);
             response = { "text": "Thanks!" };
             //response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
         }
