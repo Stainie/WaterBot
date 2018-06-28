@@ -204,6 +204,8 @@ exports.postWebhook = (req, res, next) => {
                             ]
                         };
                         return callSendAPI(sender_psid, response);
+                    }).catch(err => {
+                        console.log(err);
                     });
                     
                 }
