@@ -243,7 +243,6 @@ exports.postWebhook = (req, res, next) => {
             "recipient": {
                 "id": sender_psid
             },
-            "sender_action":"typing_off",
             "message": response
         };
 
