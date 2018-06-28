@@ -2,6 +2,7 @@ const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
 const request = require('request');
+let firstName;
 
 exports.test = (req, res, next) => {
     console.log('Heroku');
@@ -70,11 +71,9 @@ exports.postWebhook = (req, res, next) => {
 
         // Checks if the message contains text
         if (received_message.text) {
-            // Create the payload for a basic text message, which
-            // will be added to the body of our request to the Send API
-            response = {
-                "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
-            };
+            if (received_message.text.toLowerCase() === "start") {
+                response = { "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂" };
+            }
         } else if (received_message.attachments) {
             // Get the URL of the message attachment
             let attachment_url = received_message.attachments[0].payload.url;
@@ -114,7 +113,6 @@ exports.postWebhook = (req, res, next) => {
 
         // Get the payload for the postback
         let payload = received_postback.payload;
-        let bodyObj;
 
         // Set the response based on the postback payload
         if (payload === 'yes') {
@@ -132,11 +130,24 @@ exports.postWebhook = (req, res, next) => {
                 "method": "GET",
             }, (error, res, body) => {
                 if (!error && res.statusCode == 200) {
-                    bodyObj = JSON.parse(body);
-                    response = { "text": `Hi "${bodyObj.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
-
-                    console.log("SUCCESS: " + bodyObj.first_name);
-
+                    firstName = JSON.parse(body);
+                    response = { "text": `Hi "${firstName.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
+                    callSendAPI(sender_psid, response);
+                    response = { "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️" };
+                    callSendAPI(sender_psid, response);
+                    response = {
+                        "message": {
+                            "text": "Start",
+                            "quick_replies": [
+                                {
+                                    "content_type": "text",
+                                    "title": "Start",
+                                    "payload": "<POSTBACK_PAYLOAD>",
+                                    "image_url": "https://dl1.cbsistatic.com/i/r/2017/11/18/4c93abd9-ea62-4472-88a7-4c8e96b743b5/thumbnail/64x64/b6aab64adbe65584fa2c7d3c9926a030/imgingest-2115643574369400691.png"
+                                }
+                            ]
+                        }
+                    };
                     callSendAPI(sender_psid, response);
                 }
                 else {
