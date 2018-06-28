@@ -190,24 +190,21 @@ exports.postWebhook = (req, res, next) => {
             }, (error, res, body) => {
                 if (!error && res.statusCode == 200) {
                     userInfo = JSON.parse(body);
-                    response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
-                    callSendAPI(sender_psid, response).then(() => {
-                        response = {
-                            "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
-                            "quick_replies": [
-                                {
-                                    "content_type": "text",
-                                    "title": "Start",
-                                    "payload": "START_REPLY_PAYLOAD",
-                                    "image_url": "https://dl1.cbsistatic.com/i/r/2017/11/18/4c93abd9-ea62-4472-88a7-4c8e96b743b5/thumbnail/64x64/b6aab64adbe65584fa2c7d3c9926a030/imgingest-2115643574369400691.png"
-                                }
-                            ]
-                        };
-                        return callSendAPI(sender_psid, response);
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                    
+                    // response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
+                    // callSendAPI(sender_psid, response);
+                    response = {
+                        "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura`,
+                        "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
+                        "quick_replies": [
+                            {
+                                "content_type": "text",
+                                "title": "Start",
+                                "payload": "START_REPLY_PAYLOAD",
+                                "image_url": "https://dl1.cbsistatic.com/i/r/2017/11/18/4c93abd9-ea62-4472-88a7-4c8e96b743b5/thumbnail/64x64/b6aab64adbe65584fa2c7d3c9926a030/imgingest-2115643574369400691.png"
+                            }
+                        ]
+                    };
+                    callSendAPI(sender_psid, response);
                 }
                 else {
                     console.log('Error: ' + error);
