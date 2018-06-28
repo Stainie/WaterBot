@@ -2,7 +2,10 @@ const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
 const request = require('request');
+
 let firstName;
+let lastPayload;
+let lastText;
 
 exports.test = (req, res, next) => {
     console.log('Heroku');
@@ -73,6 +76,25 @@ exports.postWebhook = (req, res, next) => {
         if (received_message.text) {
             if (received_message.text.toLowerCase() === "start") {
                 response = { "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂" };
+                callSendAPI(sender_psid, response);
+                response = {
+                    "text": "After Start",
+                    "quick_replies": [
+                        {
+                            "content_type": "text",
+                            "title": "About Water Bot",
+                            "payload": "ABOUT_WATER_BOT",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Change Alerts",
+                            "payload": "CHANGE_ALERTS",
+                            "image_url": ""
+                        }
+                    ]
+                };
+                callSendAPI(sender_psid, response);
             }
         } else if (received_message.attachments) {
             // Get the URL of the message attachment
@@ -102,10 +124,8 @@ exports.postWebhook = (req, res, next) => {
                     }
                 }
             };
+            callSendAPI(sender_psid, response);
         }
-
-        // Send the response message
-        callSendAPI(sender_psid, response);
     }
 
     function handlePostback(sender_psid, received_postback) {
@@ -136,17 +156,15 @@ exports.postWebhook = (req, res, next) => {
                     response = { "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️" };
                     callSendAPI(sender_psid, response);
                     response = {
-                        "message": {
-                            "text": "Start",
-                            "quick_replies": [
-                                {
-                                    "content_type": "text",
-                                    "title": "Start",
-                                    "payload": "<POSTBACK_PAYLOAD>",
-                                    "image_url": "https://dl1.cbsistatic.com/i/r/2017/11/18/4c93abd9-ea62-4472-88a7-4c8e96b743b5/thumbnail/64x64/b6aab64adbe65584fa2c7d3c9926a030/imgingest-2115643574369400691.png"
-                                }
-                            ]
-                        }
+                        "text": "Start",
+                        "quick_replies": [
+                            {
+                                "content_type": "text",
+                                "title": "Start",
+                                "payload": "START_REPLY_PAYLOAD",
+                                "image_url": "https://dl1.cbsistatic.com/i/r/2017/11/18/4c93abd9-ea62-4472-88a7-4c8e96b743b5/thumbnail/64x64/b6aab64adbe65584fa2c7d3c9926a030/imgingest-2115643574369400691.png"
+                            }
+                        ]
                     };
                     callSendAPI(sender_psid, response);
                 }
@@ -155,6 +173,8 @@ exports.postWebhook = (req, res, next) => {
                 }
             });
         }
+
+        lastPayload = payload;
     }
 
     function callSendAPI(sender_psid, response) {
