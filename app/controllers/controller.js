@@ -76,9 +76,8 @@ exports.postWebhook = (req, res, next) => {
         if (received_message.text) {
             if (received_message.text.toLowerCase() === "start" || received_message.text.toLowerCase() === "menu"
                 || received_message.text.toLowerCase() === "help") {
-                response = { "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂" };
-                setTimeout(() => callSendAPI(sender_psid, response), 2);
                 response = {
+                    "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂",
                     "quick_replies": [
                         {
                             "content_type": "text",
@@ -193,7 +192,7 @@ exports.postWebhook = (req, res, next) => {
                     response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
                     callSendAPI(sender_psid, response);
                     response = { "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️" };
-                    setTimeout(() => callSendAPI(sender_psid, response), 2);
+                    callSendAPI(sender_psid, response);
                     response = {
                         "quick_replies": [
                             {
