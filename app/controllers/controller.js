@@ -191,8 +191,7 @@ exports.postWebhook = (req, res, next) => {
                 if (!error && res.statusCode == 200) {
                     userInfo = JSON.parse(body);
                     response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
-                    callSendAPI(sender_psid, response).then(res => {
-                        console.log("res: " + res);
+                    callSendAPI(sender_psid, response).then(() => {
                         response = {
                             "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
                             "quick_replies": [
@@ -204,7 +203,7 @@ exports.postWebhook = (req, res, next) => {
                                 }
                             ]
                         };
-                        callSendAPI(sender_psid, response);
+                        return callSendAPI(sender_psid, response);
                     });
                     
                 }
