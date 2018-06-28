@@ -193,8 +193,8 @@ exports.postWebhook = (req, res, next) => {
                     // response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
                     // callSendAPI(sender_psid, response);
                     response = {
-                        "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura`,
-                        "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
+                        "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura`+
+                        "\nWhat I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
                         "quick_replies": [
                             {
                                 "content_type": "text",
