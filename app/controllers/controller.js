@@ -77,7 +77,7 @@ exports.postWebhook = (req, res, next) => {
             if (received_message.text.toLowerCase() === "start" || received_message.text.toLowerCase() === "menu"
                 || received_message.text.toLowerCase() === "help") {
                 response = { "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂" };
-                setTimeout(callSendAPI(sender_psid, response), 1);
+                setTimeout(() => callSendAPI(sender_psid, response), 1);
                 response = {
                     "quick_replies": [
                         {
@@ -94,11 +94,11 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
-                setTimeout(callSendAPI(sender_psid, response), 1);
+                callSendAPI(sender_psid, response);
             }
             else if (received_message.text.toLowerCase() === "about water bot") {
                 response = {"text" : "WaterBot's goal is to help you drink more water for a healthier life."};
-                setTimeout(callSendAPI(sender_psid, response), 1);
+                callSendAPI(sender_psid, response);
             }
             else if (received_message.text.toLowerCase() === "change alerts") {
                 response = {
@@ -129,11 +129,11 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
-                setTimeout(callSendAPI(sender_psid, response), 1);
+                callSendAPI(sender_psid, response);
             }
             else {
                 response = {"text":`Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over`};                
-                setTimeout(callSendAPI(sender_psid, response), 1);
+                callSendAPI(sender_psid, response);
             }
         } else if (received_message.attachments) {
             // Get the URL of the message attachment
@@ -163,7 +163,7 @@ exports.postWebhook = (req, res, next) => {
                     }
                 }
             };
-            setTimeout(callSendAPI(sender_psid, response), 1);
+            callSendAPI(sender_psid, response);
         }
     }
 
@@ -176,11 +176,11 @@ exports.postWebhook = (req, res, next) => {
         // Set the response based on the postback payload
         if (payload === 'yes') {
             response = { "text": "Thanks!" };
-            setTimeout(callSendAPI(sender_psid, response), 1);
+            callSendAPI(sender_psid, response);
 
         } else if (payload === 'no') {
             response = { "text": "Oops, try sending another image." };
-            setTimeout(callSendAPI(sender_psid, response), 1);
+            callSendAPI(sender_psid, response);
         }
         else if (payload === 'GET_STARTED_PAYLOAD') {
 
@@ -191,9 +191,9 @@ exports.postWebhook = (req, res, next) => {
                 if (!error && res.statusCode == 200) {
                     userInfo = JSON.parse(body);
                     response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
-                    setTimeout(callSendAPI(sender_psid, response), 1);
+                    callSendAPI(sender_psid, response);
                     response = { "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️" };
-                    setTimeout(callSendAPI(sender_psid, response), 1);
+                    callSendAPI(sender_psid, response);
                     response = {
                         "quick_replies": [
                             {
@@ -204,7 +204,7 @@ exports.postWebhook = (req, res, next) => {
                             }
                         ]
                     };
-                    setTimeout(callSendAPI(sender_psid, response), 1);
+                    callSendAPI(sender_psid, response);
                 }
                 else {
                     console.log('Error: ' + error);
