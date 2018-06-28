@@ -204,7 +204,7 @@ exports.postWebhook = (req, res, next) => {
 
     function sendTextMessage(recipientId, messageText) {
           setTimeout(function() {
-            callSendAPI(messageData);
+            callSendAPI(recipientId, messageText);
           }, messageDelay++ * 100);    
         }
 
