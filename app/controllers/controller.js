@@ -3,7 +3,7 @@ const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
 const request = require('request');
 
-let firstName;
+let userInfo;
 let lastPayload;
 let lastText;
 
@@ -74,11 +74,11 @@ exports.postWebhook = (req, res, next) => {
 
         // Checks if the message contains text
         if (received_message.text) {
-            if (received_message.text.toLowerCase() === "start") {
+            if (received_message.text.toLowerCase() === "start" || received_message.text.toLowerCase() === "menu"
+                || received_message.text.toLowerCase() === "help") {
                 response = { "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂" };
                 callSendAPI(sender_psid, response);
                 response = {
-                    "text": "After Start",
                     "quick_replies": [
                         {
                             "content_type": "text",
@@ -95,6 +95,44 @@ exports.postWebhook = (req, res, next) => {
                     ]
                 };
                 callSendAPI(sender_psid, response);
+            }
+            else if (received_message.text.toLowerCase() === "about water bot") {
+                response = {"text" : "WaterBot's goal is to help you drink more water for a healthier life."};
+                callSendAPI(sender_psid, response);
+            }
+            else if (received_message.text.toLowerCase() === "change alerts") {
+                response = {
+                    "quick_replies": [
+                        {
+                            "content_type": "text",
+                            "title": "Every Hour",
+                            "payload": "EVERY_HOUR",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Twice a day",
+                            "payload": "TWICE_A_DAY",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Once a day",
+                            "payload": "ONCE_A_DAY",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Stop Reminders",
+                            "payload": "STOP_REMINDERS",
+                            "image_url": ""
+                        }
+                    ]
+                };
+                callSendAPI(sender_psid, response);
+            }
+            else {
+                response = {"text":`Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over`};                
             }
         } else if (received_message.attachments) {
             // Get the URL of the message attachment
@@ -150,13 +188,12 @@ exports.postWebhook = (req, res, next) => {
                 "method": "GET",
             }, (error, res, body) => {
                 if (!error && res.statusCode == 200) {
-                    firstName = JSON.parse(body);
-                    response = { "text": `Hi "${firstName.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
+                    userInfo = JSON.parse(body);
+                    response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
                     callSendAPI(sender_psid, response);
                     response = { "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️" };
                     callSendAPI(sender_psid, response);
                     response = {
-                        "text": "Start",
                         "quick_replies": [
                             {
                                 "content_type": "text",
