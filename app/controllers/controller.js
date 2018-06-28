@@ -4,8 +4,7 @@ const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 const request = require('request');
 
 let userInfo;
-let lastPayload;
-let lastText;
+let messageDelay = 0;
 
 exports.test = (req, res, next) => {
     console.log('Heroku');
@@ -36,23 +35,16 @@ exports.getWebhook = (req, res, next) => {
 
 exports.postWebhook = (req, res, next) => {
 
-    // Parse the request body from the POST
     let body = req.body;
 
-    // Check the webhook event is from a Page subscription
     if (body.object === 'page') {
 
-        // Iterate over each entry - there may be multiple if batched
         body.entry.forEach(function (entry) {
 
-            // Gets the body of the webhook event
             let webhook_event = entry.messaging[0];
 
-            // Get the sender PSID
             let sender_psid = webhook_event.sender.id;
 
-            // Check if the event is a message or postback and
-            // pass the event to the appropriate handler function
             if (webhook_event.message) {
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
@@ -61,18 +53,15 @@ exports.postWebhook = (req, res, next) => {
 
         });
 
-        // Return a '200 OK' response to all events
         res.status(200).send('EVENT_RECEIVED');
 
     } else {
-        // Return a '404 Not Found' if event is not from a page subscription
         res.sendStatus(404);
     }
 
     function handleMessage(sender_psid, received_message) {
         let response;
 
-        // Checks if the message contains text
         if (received_message.text) {
             if (received_message.text.toLowerCase() === "start" || received_message.text.toLowerCase() === "menu"
                 || received_message.text.toLowerCase() === "help") {
@@ -93,11 +82,11 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
-                callSendAPI(sender_psid, response);
+                sendTextMessage(sender_psid, response);
             }
             else if (received_message.text.toLowerCase() === "about water bot") {
-                response = {"text" : "WaterBot's goal is to help you drink more water for a healthier life."};
-                callSendAPI(sender_psid, response);
+                response = { "text": "WaterBot's goal is to help you drink more water for a healthier life." };
+                sendTextMessage(sender_psid, response);
             }
             else if (received_message.text.toLowerCase() === "change alerts") {
                 response = {
@@ -129,14 +118,14 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
-                callSendAPI(sender_psid, response);
+                sendTextMessage(sender_psid, response);
             }
             else {
-                response = {"text":`Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over`};                
-                callSendAPI(sender_psid, response);
+                response = { "text": `Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over` };
+                sendTextMessage(sender_psid, response);
             }
         } else if (received_message.attachments) {
-            // Get the URL of the message attachment
+
             let attachment_url = received_message.attachments[0].payload.url;
             response = {
                 "attachment": {
@@ -163,24 +152,22 @@ exports.postWebhook = (req, res, next) => {
                     }
                 }
             };
-            callSendAPI(sender_psid, response);
+            sendTextMessage(sender_psid, response);
         }
     }
 
     function handlePostback(sender_psid, received_postback) {
         let response;
 
-        // Get the payload for the postback
         let payload = received_postback.payload;
 
-        // Set the response based on the postback payload
         if (payload === 'yes') {
             response = { "text": "Thanks!" };
-            callSendAPI(sender_psid, response);
+            sendTextMessage(sender_psid, response);
 
         } else if (payload === 'no') {
             response = { "text": "Oops, try sending another image." };
-            callSendAPI(sender_psid, response);
+            sendTextMessage(sender_psid, response);
         }
         else if (payload === 'GET_STARTED_PAYLOAD') {
 
@@ -189,12 +176,14 @@ exports.postWebhook = (req, res, next) => {
                 "method": "GET",
             }, (error, res, body) => {
                 if (!error && res.statusCode == 200) {
+
                     userInfo = JSON.parse(body);
-                    // response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
-                    // callSendAPI(sender_psid, response);
+
+                    response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
+                    sendTextMessage(sender_psid, response);
+
                     response = {
-                        "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura`+
-                        "\nWhat I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
+                        "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
                         "quick_replies": [
                             {
                                 "content_type": "text",
@@ -204,41 +193,23 @@ exports.postWebhook = (req, res, next) => {
                             }
                         ]
                     };
-                    callSendAPI(sender_psid, response);
+                    sendTextMessage(sender_psid, response);
                 }
                 else {
                     console.log('Error: ' + error);
                 }
             });
         }
-
-        lastPayload = payload;
     }
 
-    function callTypingAPI(sender_psid) {
-        let request_body = {
-            "recipient": {
-                "id": sender_psid
-            },
-            "sender_action":"typing_on"
-        };
-
-        request({
-            "uri": "https://graph.facebook.com/v2.6/me/messages",
-            "qs": { "access_token": ACCESS_TOKEN },
-            "method": "POST",
-            "json": request_body
-        }, (err, res, body) => {
-            if (!err) {
-                console.log('Typing!');
-            } else {
-                console.error("Error while typing:" + err);
-            }
-        });
-    }
+    function sendTextMessage(recipientId, messageText) {
+          setTimeout(function() {
+            callSendAPI(messageData);
+          }, messageDelay++ * 100);    
+        }
 
     function callSendAPI(sender_psid, response) {
-        // Construct the message body
+
         let request_body = {
             "recipient": {
                 "id": sender_psid
@@ -246,7 +217,6 @@ exports.postWebhook = (req, res, next) => {
             "message": response
         };
 
-        // Send the HTTP request to the Messenger Platform
         request({
             "uri": "https://graph.facebook.com/v2.6/me/messages",
             "qs": { "access_token": ACCESS_TOKEN },
@@ -254,7 +224,8 @@ exports.postWebhook = (req, res, next) => {
             "json": request_body
         }, (err, res, body) => {
             if (!err) {
-                console.log('message sent!');
+                console.log('message sent! Delay is: ' + messageDelay);
+                messageDelay = 0;
             } else {
                 console.error("Unable to send message:" + err);
             }
