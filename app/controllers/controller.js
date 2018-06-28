@@ -77,7 +77,7 @@ exports.postWebhook = (req, res, next) => {
             if (received_message.text.toLowerCase() === "start" || received_message.text.toLowerCase() === "menu"
                 || received_message.text.toLowerCase() === "help") {
                 response = { "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂" };
-                callSendAPI(sender_psid, response);
+                setTimeout(() => callSendAPI(sender_psid, response), 50);
                 response = {
                     "quick_replies": [
                         {
@@ -94,11 +94,11 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
-                callSendAPI(sender_psid, response);
+                setTimeout(() => callSendAPI(sender_psid, response), 50);
             }
             else if (received_message.text.toLowerCase() === "about water bot") {
                 response = {"text" : "WaterBot's goal is to help you drink more water for a healthier life."};
-                callSendAPI(sender_psid, response);
+                setTimeout(() => callSendAPI(sender_psid, response), 50);
             }
             else if (received_message.text.toLowerCase() === "change alerts") {
                 response = {
@@ -129,10 +129,11 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
-                callSendAPI(sender_psid, response);
+                setTimeout(() => callSendAPI(sender_psid, response), 50);
             }
             else {
                 response = {"text":`Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over`};                
+                setTimeout(() => callSendAPI(sender_psid, response), 50);
             }
         } else if (received_message.attachments) {
             // Get the URL of the message attachment
@@ -162,7 +163,7 @@ exports.postWebhook = (req, res, next) => {
                     }
                 }
             };
-            callSendAPI(sender_psid, response);
+            setTimeout(() => callSendAPI(sender_psid, response), 50);
         }
     }
 
@@ -203,7 +204,7 @@ exports.postWebhook = (req, res, next) => {
                             }
                         ]
                     };
-                    callSendAPI(sender_psid, response);
+                    setTimeout(() => callSendAPI(sender_psid, response), 50);
                 }
                 else {
                     console.log('Error: ' + error);
@@ -214,12 +215,35 @@ exports.postWebhook = (req, res, next) => {
         lastPayload = payload;
     }
 
+    function callTypingAPI(sender_psid) {
+        let request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "sender_action":"typing_on"
+        };
+
+        request({
+            "uri": "https://graph.facebook.com/v2.6/me/messages",
+            "qs": { "access_token": ACCESS_TOKEN },
+            "method": "POST",
+            "json": request_body
+        }, (err, res, body) => {
+            if (!err) {
+                console.log('Typing!');
+            } else {
+                console.error("Error while typing:" + err);
+            }
+        });
+    }
+
     function callSendAPI(sender_psid, response) {
         // Construct the message body
         let request_body = {
             "recipient": {
                 "id": sender_psid
             },
+            "sender_action":"typing_off",
             "message": response
         };
 
