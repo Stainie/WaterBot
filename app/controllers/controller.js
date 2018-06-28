@@ -2,6 +2,7 @@ const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
 const request = require('request');
+const constantMessages = require('../helping_scripts/constantsMessages');
 
 let userInfo;
 let messageDelay = 0;
@@ -63,8 +64,7 @@ exports.postWebhook = (req, res, next) => {
         let response;
 
         if (received_message.text) {
-            if (received_message.text.toLowerCase() === "start" || received_message.text.toLowerCase() === "menu"
-                || received_message.text.toLowerCase() === "help") {
+            if (constantMessages.isStart(received_message.text)) {
                 response = {
                     "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂",
                     "quick_replies": [
@@ -84,11 +84,11 @@ exports.postWebhook = (req, res, next) => {
                 };
                 sendTextMessage(sender_psid, response);
             }
-            else if (received_message.text.toLowerCase() === "about water bot") {
+            else if (constantMessages.isAbout(received_message.text)) {
                 response = { "text": "WaterBot's goal is to help you drink more water for a healthier life." };
                 sendTextMessage(sender_psid, response);
             }
-            else if (received_message.text.toLowerCase() === "change alerts") {
+            else if (constantMessages.isAlarm(received_message.text)) {
                 response = {
                     "text": "How often do you want to be reminded?",
                     "quick_replies": [
@@ -161,15 +161,7 @@ exports.postWebhook = (req, res, next) => {
 
         let payload = received_postback.payload;
 
-        if (payload === 'yes') {
-            response = { "text": "Thanks!" };
-            sendTextMessage(sender_psid, response);
-
-        } else if (payload === 'no') {
-            response = { "text": "Oops, try sending another image." };
-            sendTextMessage(sender_psid, response);
-        }
-        else if (payload === 'GET_STARTED_PAYLOAD') {
+        if (constantMessages.isFirstMessage(payload)) {
 
             request({
                 "uri": 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN,
