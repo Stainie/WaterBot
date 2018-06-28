@@ -101,6 +101,7 @@ exports.postWebhook = (req, res, next) => {
             }
             else if (received_message.text.toLowerCase() === "change alerts") {
                 response = {
+                    "text": "How often do you want to be reminded?",
                     "quick_replies": [
                         {
                             "content_type": "text",
@@ -191,9 +192,8 @@ exports.postWebhook = (req, res, next) => {
                     userInfo = JSON.parse(body);
                     response = { "text": `Hi "${userInfo.first_name}"! I will be your personal water trainer :) you can call me Nada Macura` };
                     callSendAPI(sender_psid, response);
-                    response = { "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️" };
-                    callSendAPI(sender_psid, response);
                     response = {
+                        "text": "What I can do for you?\n\n☑️ Daily water reminders\n☑️ Personalized AI recommendations\n☑️ Number of cups of water drank this week\n☑️Tips about water drinking️️",
                         "quick_replies": [
                             {
                                 "content_type": "text",
