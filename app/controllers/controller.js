@@ -77,7 +77,7 @@ exports.postWebhook = (req, res, next) => {
             if (received_message.text.toLowerCase() === "start" || received_message.text.toLowerCase() === "menu"
                 || received_message.text.toLowerCase() === "help") {
                 response = { "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂" };
-                setTimeout(() => callSendAPI(sender_psid, response), 1);
+                callSendAPI(sender_psid, response);
                 response = {
                     "quick_replies": [
                         {
