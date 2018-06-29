@@ -2,7 +2,10 @@ const VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
 const ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 
 const request = require('request');
+const moment = require('moment');
+
 const constantMessages = require('../helping_scripts/constantsMessages');
+const userBroker = require('../dbBroker/userBroker');
 
 let userInfo;
 let messageDelay = 0;
@@ -106,12 +109,6 @@ exports.postWebhook = (req, res, next) => {
                         },
                         {
                             "content_type": "text",
-                            "title": "Once a day",
-                            "payload": "ONCE_A_DAY",
-                            "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
                             "title": "Stop Reminders",
                             "payload": "STOP_REMINDERS",
                             "image_url": ""
@@ -119,6 +116,21 @@ exports.postWebhook = (req, res, next) => {
                     ]
                 };
                 sendTextMessage(sender_psid, response);
+            }
+            else if (constantMessages.isEveryHour(received_message.text)) {
+                userBroker.updateUser(sender_psid, 0);
+
+                setReminder(sender_psid, 1);
+            }
+            else if (constantMessages.isTwice(received_message.text)) {
+                userBroker.updateUser(sender_psid, 12);
+
+                setReminder(sender_psid, 12);
+            }
+            else if (constantMessages.isStopReminders()) {
+                userBroker.updateUser(sender_psid, -1);
+
+                setReminder(sender_psid, -1);
             }
             else {
                 response = { "text": `Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over` };
@@ -186,6 +198,8 @@ exports.postWebhook = (req, res, next) => {
                         ]
                     };
                     sendTextMessage(sender_psid, response);
+
+                    userBroker.createUser(sender_psid);
                 }
                 else {
                     console.log('Error: ' + error);
@@ -194,11 +208,35 @@ exports.postWebhook = (req, res, next) => {
         }
     }
 
-    function sendTextMessage(recipientId, messageText) {
-          setTimeout(function() {
-            callSendAPI(recipientId, messageText);
-          }, messageDelay++ * 100);    
+    function setReminder(recipient, interval) {
+        if (interval === -1) {
+            return;
         }
+        setTimeout(function() {
+            checkReminder(recipient);
+        }, 1000 * 5 * interval);
+    }
+
+    function checkReminder(recipientId) {
+        let user = userBroker.getUser(recipientId);
+        let userTime = user.nextReminder;
+        let userInterval = user.remindInterval;
+
+        let response;
+
+        if (moment().toDate() >= moment(userTime)) {
+            response = {"text": "Legendo 🙂"};
+            sendTextMessage(recipientId, response);
+
+            userBroker.updateUser(recipientId, userInterval);
+        }
+    }
+
+    function sendTextMessage(recipientId, messageText) {
+        setTimeout(function () {
+            callSendAPI(recipientId, messageText);
+        }, messageDelay++ * 100);
+    }
 
     function callSendAPI(sender_psid, response) {
 

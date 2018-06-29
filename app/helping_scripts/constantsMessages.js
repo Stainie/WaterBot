@@ -13,3 +13,15 @@ exports.isAlarm = (text) => {
 exports.isFirstMessage = (text) => {
     return text === "GET_STARTED_PAYLOAD";
 };
+
+exports.isEveryHour = (text) => {
+    return text.toLowerCase() === "every hour";
+};
+
+exports.isTwice = (text) => {
+    return text.toLowerCase() === "twice a day";
+};
+
+exports.isStopReminders = (text) => {
+    return text.toLowerCase() === "stop reminders";
+};
