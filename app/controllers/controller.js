@@ -244,31 +244,6 @@ exports.postWebhook = (req, res, next) => {
             }
 
             sendTextMessage(sender_psid, response);
-
-            response = {
-                "text": "How often do you want to be reminded?",
-                "quick_replies": [
-                    {
-                        "content_type": "text",
-                        "title": "Every Half Hour",
-                        "payload": "EVERY_HALF_HOUR",
-                        "image_url": ""
-                    },
-                    {
-                        "content_type": "text",
-                        "title": "Twice a day",
-                        "payload": "TWICE_A_DAY",
-                        "image_url": ""
-                    },
-                    {
-                        "content_type": "text",
-                        "title": "Stop Reminders",
-                        "payload": "STOP_REMINDERS",
-                        "image_url": ""
-                    }
-                ]
-            };
-            sendTextMessage(sender_psid, response);
         }
 
     }
@@ -287,9 +262,6 @@ exports.postWebhook = (req, res, next) => {
     }
 
     function checkReminder(recipientId, interval) {
-
-        console.log("TIME HAS PASSED");
-
         userBroker.checkUserTime(recipientId, () => {
             let response;
 
@@ -326,6 +298,7 @@ exports.postWebhook = (req, res, next) => {
 
             sendTextMessage(recipientId, response);
             userBroker.updateUser(recipientId, interval);
+            setReminder(recipientId, interval);
         });
     }
 
