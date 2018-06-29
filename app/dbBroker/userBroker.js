@@ -55,7 +55,6 @@ exports.updateUser = (id, interval) => {
 
 exports.getUser = (id) => {
     User.findOne({facebookId: id})
-        .select('-__v')
         .exec()
         .then(doc => {
             const response = {
@@ -65,8 +64,8 @@ exports.getUser = (id) => {
             };
 
             console.log("Successfully returned user: " + response);
-
-            return response;
+            
+            return JSON.parse(response);
         })
         .catch(err => {
             console.log("Error while getting user: " + err);

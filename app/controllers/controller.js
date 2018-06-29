@@ -85,7 +85,7 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
-                
+
                 userBroker.createUser(sender_psid);
                 sendTextMessage(sender_psid, response);
             }
@@ -214,20 +214,26 @@ exports.postWebhook = (req, res, next) => {
         if (interval === -1) {
             return;
         }
-        setTimeout(function() {
+        setTimeout(function () {
             checkReminder(recipient);
         }, 1000 * 5 * interval);
     }
 
     function checkReminder(recipientId) {
-        let user = userBroker.getUser(recipientId);
+        let userJSON = userBroker.getUser(recipientId);
+
+        let user = JSON.stringify(userJSON);
+
+        console.log('user prop 1: ' + user[0]);
+        console.log('user prop 2: ' + user[1]);
+
         let userTime = user.nextReminder;
         let userInterval = user.remindInterval;
 
         let response;
 
         if (moment().toDate() >= moment(userTime)) {
-            response = {"text": "Legendo 🙂"};
+            response = { "text": "Legendo 🙂" };
             sendTextMessage(recipientId, response);
 
             userBroker.updateUser(recipientId, userInterval);
