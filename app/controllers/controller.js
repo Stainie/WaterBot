@@ -287,6 +287,9 @@ exports.postWebhook = (req, res, next) => {
     }
 
     function checkReminder(recipientId, interval) {
+
+        console.log("TIME HAS PASSED");
+
         userBroker.checkUserTime(recipientId, () => {
             let response;
 
@@ -317,7 +320,6 @@ exports.postWebhook = (req, res, next) => {
                                 }
                             ],
                         }],
-                        "is_reusable": true
                     }
                 }
             };
