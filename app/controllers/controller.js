@@ -323,7 +323,7 @@ exports.postWebhook = (req, res, next) => {
             };
 
             sendTextMessage(recipientId, response);
-            userBroker.updateUser(recipientId, userInterval);
+            userBroker.updateUser(recipientId, interval);
         });
     }
 
