@@ -1,20 +1,29 @@
 const User = require('../model/user');
 const moment = require('moment');
 
-exports.createUser = (facebookId) => {
-    const user = new User({
-        facebookId: facebookId,
-        remindInterval: -1,
-        nextReminder: moment().toDate().toISOString()
-    });
+exports.createUser = (id) => {
 
-    user
-        .save()
-        .then(result => {
-            console.log('Successfully saved user: ' + result);
-        })
-        .catch(err => {
-            console.log('Error while saving user: ' + err);
+    User.findOne({facebookId: id})
+        .exec()
+        .then(us => {
+            if (us.length >= 1) {
+                console.log('User already exists');
+                return;
+            }
+            const user = new User({
+                facebookId: id,
+                remindInterval: -1,
+                nextReminder: moment().toDate().toISOString()
+            });
+        
+            user
+                .save()
+                .then(result => {
+                    console.log('Successfully saved user: ' + result);
+                })
+                .catch(err => {
+                    console.log('Error while saving user: ' + err);
+                });
         });
 };
 

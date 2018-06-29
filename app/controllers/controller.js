@@ -85,6 +85,8 @@ exports.postWebhook = (req, res, next) => {
                         }
                     ]
                 };
+                
+                userBroker.createUser(sender_psid);
                 sendTextMessage(sender_psid, response);
             }
             else if (constantMessages.isAbout(received_message.text)) {

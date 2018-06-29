@@ -2,13 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const database = require('./config/database');
 
 const app = express();
 const routes = require('./app/routes/routes');
 
 /* ----- Connect to Database ----- */
-mongoose.connect(database.url);
+mongoose.connect(process.env.MONGODB_URI);
 mongoose.Promise = global.Promise;
 
 const db = mongoose.connection;
@@ -20,7 +19,7 @@ db.once('open', function(){
 
 /* ----- Reporting DB Error ----- */
 db.on('error', function(err){
-    console.log(err);
+    console.log('DATABASE ERROR: ' + err);
 });
 
 /* ----- Logging Errors ----- */
