@@ -3,7 +3,7 @@ const moment = require('moment');
 
 exports.createUser = (id) => {
 
-    User.findOne({facebookId: id})
+    User.findOne({ facebookId: id })
         .exec()
         .then(us => {
             if (us != null) {
@@ -15,7 +15,7 @@ exports.createUser = (id) => {
                 remindInterval: -1,
                 nextReminder: moment().toDate().toISOString()
             });
-        
+
             user
                 .save()
                 .then(result => {
@@ -37,7 +37,7 @@ exports.updateUser = (id, interval) => {
         nextTime = moment().add(interval, "hours").toDate().toISOString();
     }
 
-    User.update({facebookId: id}, {
+    User.update({ facebookId: id }, {
         $set: {
             remindInterval: interval,
             nextReminder: nextTime
@@ -53,13 +53,10 @@ exports.updateUser = (id, interval) => {
         });
 };
 
-exports.getUser = (id) => {
-    User.findOne({facebookId: id})
+exports.checkUserTime = (id, callback) => {
+    User.findOne({ facebookId: id })
         .exec()
         .then(doc => {
-
-            console.log("RETURNING USER!!!");
-
             const response = {
                 facebookId: doc.facebookId,
                 remindInterval: doc.remindInterval,
@@ -67,8 +64,9 @@ exports.getUser = (id) => {
             };
 
             console.log("Successfully returned user: " + response);
-            
-            return response;
+
+            if (moment().toDate() >= moment(doc.nextReminder))
+                callback();
         })
         .catch(err => {
             console.log("Error while getting user: " + err);
