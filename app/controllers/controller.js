@@ -99,8 +99,8 @@ exports.postWebhook = (req, res, next) => {
                     "quick_replies": [
                         {
                             "content_type": "text",
-                            "title": "Every Hour",
-                            "payload": "EVERY_HOUR",
+                            "title": "Every Half Hour",
+                            "payload": "EVERY_HALF_HOUR",
                             "image_url": ""
                         },
                         {
@@ -119,7 +119,7 @@ exports.postWebhook = (req, res, next) => {
                 };
                 sendTextMessage(sender_psid, response);
             }
-            else if (constantMessages.isEveryHour(received_message.text)) {
+            else if (constantMessages.isEveryHalfHour(received_message.text)) {
                 userBroker.updateUser(sender_psid, 0);
 
                 setReminder(sender_psid, 1);
@@ -127,7 +127,7 @@ exports.postWebhook = (req, res, next) => {
             else if (constantMessages.isTwice(received_message.text)) {
                 userBroker.updateUser(sender_psid, 12);
 
-                setReminder(sender_psid, 12);
+                setReminder(sender_psid, 24);
             }
             else if (constantMessages.isStopReminders()) {
                 userBroker.updateUser(sender_psid, -1);
@@ -208,25 +208,120 @@ exports.postWebhook = (req, res, next) => {
                 }
             });
         }
+        else if (constantMessages.hasDrank(payload)) {
+            if (constantMessages.hasDrankLittle(payload)) {
+                response = {
+                    "attachment": {
+                        "type": "image",
+                        "payload": {
+                            "url": "https://cdn.britannica.com/700x450/10/152310-004-AE62B6B8.jpg",
+                            "is_reusable": true
+                        }
+                    }
+                };
+            }
+            else if (constantMessages.hasDrankMedium(payload)) {
+                response = {
+                    "attachment": {
+                        "type": "image",
+                        "payload": {
+                            "url": "https://www.kurir.rs/data/images/2017/08/06/08/1255519_profimedia0344131111_ls-s.jpg",
+                            "is_reusable": true
+                        }
+                    }
+                };
+            }
+            else if (constantMessages.hasDrankLot(payload)) {
+                response = {
+                    "attachment": {
+                        "type": "image",
+                        "payload": {
+                            "url": "https://i.imgflip.com/1uiqz4.jpg",
+                            "is_reusable": true
+                        }
+                    }
+                };
+            }
+
+            sendTextMessage(sender_psid, response);
+
+            response = {
+                "text": "How often do you want to be reminded?",
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "Every Half Hour",
+                        "payload": "EVERY_HALF_HOUR",
+                        "image_url": ""
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "Twice a day",
+                        "payload": "TWICE_A_DAY",
+                        "image_url": ""
+                    },
+                    {
+                        "content_type": "text",
+                        "title": "Stop Reminders",
+                        "payload": "STOP_REMINDERS",
+                        "image_url": ""
+                    }
+                ]
+            };
+            sendTextMessage(sender_psid, response);
+        }
+
     }
 
     function setReminder(recipient, interval) {
         if (interval === -1) {
             let response;
-            response = { "text": "You can always set reminder by typing Start and then selecting change alerts" }; 
+            response = { "text": "You can always set reminder by typing Start and then selecting change alerts" };
             sendTextMessage(recipient, response);
             return;
         }
 
         setTimeout(function () {
-            checkReminder(recipient);
-        }, 1000 * 1800 * interval);
+            checkReminder(recipient, interval);
+        }, 1000 * 18 * interval);
     }
 
-    function checkReminder(recipientId) {
+    function checkReminder(recipientId, interval) {
         userBroker.checkUserTime(recipientId, () => {
             let response;
-            response = { "text": "Legendo 🙂" };    //SLIKA SA PAYLOAD DA/NE (tu bi iso i update)
+
+            response = {
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [{
+                            "title": "Time for your water dose",
+                            "subtitle": "How many glasses have you drank today?",
+                            "image_url": "https://i.gifer.com/2NrY.gif",
+                            "buttons": [
+                                {
+                                    "type": "postback",
+                                    "title": "0-2",
+                                    "payload": "0-2",
+                                },
+                                {
+                                    "type": "postback",
+                                    "title": "3-5",
+                                    "payload": "3-5",
+                                },
+                                {
+                                    "type": "postback",
+                                    "title": "6+",
+                                    "payload": "6+",
+                                }
+                            ],
+                        }],
+                        "is_reusable": true
+                    }
+                }
+            };
+
             sendTextMessage(recipientId, response);
             userBroker.updateUser(recipientId, userInterval);
         });
