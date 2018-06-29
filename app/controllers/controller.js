@@ -212,18 +212,21 @@ exports.postWebhook = (req, res, next) => {
 
     function setReminder(recipient, interval) {
         if (interval === -1) {
+            let response;
+            response = { "text": "You can always set reminder by typing Start and then selecting change alerts" }; 
+            sendTextMessage(recipient, response);
             return;
         }
 
         setTimeout(function () {
             checkReminder(recipient);
-        }, 1000 * 5 * interval);
+        }, 1000 * 3600 * interval);
     }
 
     function checkReminder(recipientId) {
         userBroker.checkUserTime(recipientId, () => {
             let response;
-            response = { "text": "Legendo 🙂" };
+            response = { "text": "Legendo 🙂" };    //SLIKA SA PAYLOAD DA/NE (tu bi iso i update)
             sendTextMessage(recipientId, response);
             userBroker.updateUser(recipientId, userInterval);
         });
