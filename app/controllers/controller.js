@@ -220,7 +220,7 @@ exports.postWebhook = (req, res, next) => {
 
         setTimeout(function () {
             checkReminder(recipient);
-        }, 1000 * 300 * interval);
+        }, 1000 * 1800 * interval);
     }
 
     function checkReminder(recipientId) {
