@@ -6,7 +6,7 @@ exports.createUser = (id) => {
     User.findOne({facebookId: id})
         .exec()
         .then(us => {
-            if (us.length >= 1) {
+            if (us != null) {
                 console.log('User already exists');
                 return;
             }
