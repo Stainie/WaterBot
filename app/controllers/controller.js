@@ -225,14 +225,8 @@ exports.postWebhook = (req, res, next) => {
             let response;
             response = { "text": "Legendo 🙂" };
             sendTextMessage(recipientId, response);
-        });
-
-
-        if (moment().toDate() >= moment(user.nextReminder)) {
-
-
             userBroker.updateUser(recipientId, userInterval);
-        }
+        });
     }
 
     function sendTextMessage(recipientId, messageText) {
