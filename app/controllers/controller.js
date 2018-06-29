@@ -49,6 +49,8 @@ exports.postWebhook = (req, res, next) => {
 
             let sender_psid = webhook_event.sender.id;
 
+            console.log('sender start: ' + sender_psid);
+
             if (webhook_event.message) {
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
@@ -214,26 +216,20 @@ exports.postWebhook = (req, res, next) => {
         if (interval === -1) {
             return;
         }
-        setTimeout(function () {
+        setTimeout(function() {
             checkReminder(recipient);
         }, 1000 * 5 * interval);
     }
 
     function checkReminder(recipientId) {
-        let userJSON = userBroker.getUser(recipientId);
+        console.log('facebook id: ' + recipientId);
 
-        let user = JSON.stringify(userJSON);
-
-        console.log('user prop 1: ' + user[0]);
-        console.log('user prop 2: ' + user[1]);
-
-        let userTime = user.nextReminder;
-        let userInterval = user.remindInterval;
+        let user = userBroker.getUser(recipientId);
 
         let response;
 
-        if (moment().toDate() >= moment(userTime)) {
-            response = { "text": "Legendo 🙂" };
+        if (moment().toDate() >= moment(user.nextReminder)) {
+            response = {"text": "Legendo 🙂"};
             sendTextMessage(recipientId, response);
 
             userBroker.updateUser(recipientId, userInterval);

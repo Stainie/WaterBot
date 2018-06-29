@@ -57,6 +57,9 @@ exports.getUser = (id) => {
     User.findOne({facebookId: id})
         .exec()
         .then(doc => {
+
+            console.log("RETURNING USER!!!");
+
             const response = {
                 facebookId: doc.facebookId,
                 remindInterval: doc.remindInterval,
@@ -65,7 +68,7 @@ exports.getUser = (id) => {
 
             console.log("Successfully returned user: " + response);
             
-            return JSON.parse(response);
+            return response;
         })
         .catch(err => {
             console.log("Error while getting user: " + err);
