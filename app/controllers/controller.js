@@ -99,20 +99,20 @@ exports.postWebhook = (req, res, next) => {
                     "quick_replies": [
                         {
                             "content_type": "text",
-                            "title": "Every Half Hour",
-                            "payload": "EVERY_HALF_HOUR",
+                            "title": "Every half hour",
+                            "payload": "Every half hour",
                             "image_url": ""
                         },
                         {
                             "content_type": "text",
                             "title": "Twice a day",
-                            "payload": "TWICE_A_DAY",
+                            "payload": "Twice a day",
                             "image_url": ""
                         },
                         {
                             "content_type": "text",
-                            "title": "Stop Reminders",
-                            "payload": "STOP_REMINDERS",
+                            "title": "Stop reminders",
+                            "payload": "Stop reminders",
                             "image_url": ""
                         }
                     ]
