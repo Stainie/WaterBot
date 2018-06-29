@@ -217,7 +217,27 @@ exports.postWebhook = (req, res, next) => {
                             "url": "https://cdn.britannica.com/700x450/10/152310-004-AE62B6B8.jpg",
                             "is_reusable": true
                         }
-                    }
+                    },
+                    "quick_replies": [
+                        {
+                            "content_type": "text",
+                            "title": "Every half hour",
+                            "payload": "Every half hour",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Twice a day",
+                            "payload": "Twice a day",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Stop reminders",
+                            "payload": "Stop reminders",
+                            "image_url": ""
+                        }
+                    ]
                 };
             }
             else if (constantMessages.hasDrankMedium(payload)) {
@@ -228,7 +248,27 @@ exports.postWebhook = (req, res, next) => {
                             "url": "https://www.kurir.rs/data/images/2017/08/06/08/1255519_profimedia0344131111_ls-s.jpg",
                             "is_reusable": true
                         }
-                    }
+                    },
+                    "quick_replies": [
+                        {
+                            "content_type": "text",
+                            "title": "Every half hour",
+                            "payload": "Every half hour",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Twice a day",
+                            "payload": "Twice a day",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Stop reminders",
+                            "payload": "Stop reminders",
+                            "image_url": ""
+                        }
+                    ]
                 };
             }
             else if (constantMessages.hasDrankLot(payload)) {
@@ -239,7 +279,27 @@ exports.postWebhook = (req, res, next) => {
                             "url": "https://i.imgflip.com/1uiqz4.jpg",
                             "is_reusable": true
                         }
-                    }
+                    },
+                    "quick_replies": [
+                        {
+                            "content_type": "text",
+                            "title": "Every half hour",
+                            "payload": "Every half hour",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Twice a day",
+                            "payload": "Twice a day",
+                            "image_url": ""
+                        },
+                        {
+                            "content_type": "text",
+                            "title": "Stop reminders",
+                            "payload": "Stop reminders",
+                            "image_url": ""
+                        }
+                    ]
                 };
             }
 
@@ -298,7 +358,6 @@ exports.postWebhook = (req, res, next) => {
 
             sendTextMessage(recipientId, response);
             userBroker.updateUser(recipientId, interval);
-            setReminder(recipientId, interval);
         });
     }
 
