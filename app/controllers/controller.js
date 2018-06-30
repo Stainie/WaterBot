@@ -363,9 +363,7 @@ exports.postWebhook = (req, res, next) => {
 
     function sendTextMessage(recipientId, messageText) {
         callTypingOn(recipientId);
-        callMarkSeen(recipientId);
         setTimeout(function () {
-            callTypingOff(recipientId);
             callSendAPI(recipientId, messageText);
         }, messageDelay++ * 1000);
     }
