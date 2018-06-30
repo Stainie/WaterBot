@@ -48,6 +48,7 @@ exports.postWebhook = (req, res, next) => {
             let webhook_event = entry.messaging[0];
 
             let sender_psid = webhook_event.sender.id;
+            console.log("user: " + sender_psid);
 
             if (webhook_event.message) {
                 handleMessage(sender_psid, webhook_event.message);
