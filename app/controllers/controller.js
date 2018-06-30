@@ -48,18 +48,12 @@ exports.postWebhook = (req, res, next) => {
             let webhook_event = entry.messaging[0];
 
             let sender_psid = webhook_event.sender.id;
-            console.log("user: " + sender_psid);
 
             if (webhook_event.message) {
-                console.log("message");
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
-                console.log("postback");
                 handlePostback(sender_psid, webhook_event.postback);
-            } else {
-                console.log("NOTHIG");
-            }
-
+            } 
         });
 
         res.status(200).send('EVENT_RECEIVED');
@@ -72,7 +66,13 @@ exports.postWebhook = (req, res, next) => {
         let response;
 
         if (received_message.text) {
+
+            console.log("TEXT: " + received_message.text);
+
             if (constantMessages.isStart(received_message.text)) {
+
+                console.log("START MESSAGE");
+
                 response = {
                     "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂",
                     "quick_replies": [
@@ -172,6 +172,9 @@ exports.postWebhook = (req, res, next) => {
                 }
             };
             sendTextMessage(sender_psid, response);
+        }
+        else {
+            console.log('SOMETHING THIRD');
         }
     }
 
