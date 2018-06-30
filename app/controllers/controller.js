@@ -51,9 +51,13 @@ exports.postWebhook = (req, res, next) => {
             console.log("user: " + sender_psid);
 
             if (webhook_event.message) {
+                console.log("message");
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
+                console.log("postback");
                 handlePostback(sender_psid, webhook_event.postback);
+            } else {
+                console.log("NOTHIG");
             }
 
         });
