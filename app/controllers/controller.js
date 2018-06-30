@@ -179,7 +179,7 @@ exports.postWebhook = (req, res, next) => {
         let response;
 
         let payload = received_postback.payload;
-
+        console.log('recieved Postback');
         if (constantMessages.isFirstMessage(payload)) {
 
             request({
