@@ -113,12 +113,6 @@ exports.postWebhook = (req, res, next) => {
                             "title": "Twice a day",
                             "payload": "Twice a day",
                             "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
-                            "title": "Stop reminders",
-                            "payload": "Stop reminders",
-                            "image_url": ""
                         }
                     ]
                 };
@@ -134,43 +128,10 @@ exports.postWebhook = (req, res, next) => {
 
                 setReminder(sender_psid, 24);
             }
-            else if (constantMessages.isStopReminders()) {
-                response = { "text": "You can always turn reminders on by typing Start and then selecting Change Alerts :)" };
-                sendTextMessage(sender_psid, response);
-            }
             else {
                 response = { "text": `Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over` };
                 sendTextMessage(sender_psid, response);
             }
-        } else if (received_message.attachments) {
-
-            let attachment_url = received_message.attachments[0].payload.url;
-            response = {
-                "attachment": {
-                    "type": "template",
-                    "payload": {
-                        "template_type": "generic",
-                        "elements": [{
-                            "title": "Is this the right picture?",
-                            "subtitle": "Tap a button to answer.",
-                            "image_url": attachment_url,
-                            "buttons": [
-                                {
-                                    "type": "postback",
-                                    "title": "Yes!",
-                                    "payload": "yes",
-                                },
-                                {
-                                    "type": "postback",
-                                    "title": "No!",
-                                    "payload": "no",
-                                }
-                            ],
-                        }]
-                    }
-                }
-            };
-            sendTextMessage(sender_psid, response);
         }
     }
 
@@ -216,100 +177,82 @@ exports.postWebhook = (req, res, next) => {
                 }
             });
         }
-        else if (constantMessages.hasDrank(payload)) {
-            if (constantMessages.hasDrankLittle(payload)) {
-                response = {
-                    "attachment": {
-                        "type": "image",
-                        "payload": {
-                            "url": "https://cdn.britannica.com/700x450/10/152310-004-AE62B6B8.jpg",
-                            "is_reusable": true
-                        }
+        else if (constantMessages.hasDrankLittle(payload)) {
+            response = {
+                "attachment": {
+                    "type": "image",
+                    "payload": {
+                        "url": "https://cdn.britannica.com/700x450/10/152310-004-AE62B6B8.jpg",
+                        "is_reusable": true
+                    }
+                },
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "Every half hour",
+                        "payload": "Every half hour",
+                        "image_url": ""
                     },
-                    "quick_replies": [
-                        {
-                            "content_type": "text",
-                            "title": "Every half hour",
-                            "payload": "Every half hour",
-                            "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
-                            "title": "Twice a day",
-                            "payload": "Twice a day",
-                            "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
-                            "title": "No more reminders",
-                            "payload": "No more reminders",
-                            "image_url": ""
-                        }
-                    ]
-                };
-            }
-            else if (constantMessages.hasDrankMedium(payload)) {
-                response = {
-                    "attachment": {
-                        "type": "image",
-                        "payload": {
-                            "url": "https://www.kurir.rs/data/images/2017/08/06/08/1255519_profimedia0344131111_ls-s.jpg",
-                            "is_reusable": true
-                        }
+                    {
+                        "content_type": "text",
+                        "title": "Twice a day",
+                        "payload": "Twice a day",
+                        "image_url": ""
+                    }
+                ]
+            };
+            sendTextMessage(sender_psid, response);
+        }
+        else if (constantMessages.hasDrankMedium(payload)) {
+            response = {
+                "attachment": {
+                    "type": "image",
+                    "payload": {
+                        "url": "https://www.kurir.rs/data/images/2017/08/06/08/1255519_profimedia0344131111_ls-s.jpg",
+                        "is_reusable": true
+                    }
+                },
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "Every half hour",
+                        "payload": "Every half hour",
+                        "image_url": ""
                     },
-                    "quick_replies": [
-                        {
-                            "content_type": "text",
-                            "title": "Every half hour",
-                            "payload": "Every half hour",
-                            "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
-                            "title": "Twice a day",
-                            "payload": "Twice a day",
-                            "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
-                            "title": "Stop reminders",
-                            "payload": "Stop reminders",
-                            "image_url": ""
-                        }
-                    ]
-                };
-            }
-            else if (constantMessages.hasDrankLot(payload)) {
-                response = {
-                    "attachment": {
-                        "type": "image",
-                        "payload": {
-                            "url": "https://i.imgflip.com/1uiqz4.jpg",
-                            "is_reusable": true
-                        }
+                    {
+                        "content_type": "text",
+                        "title": "Twice a day",
+                        "payload": "Twice a day",
+                        "image_url": ""
+                    }
+                ]
+            };
+            sendTextMessage(sender_psid, response);
+        }
+        else if (constantMessages.hasDrankLot(payload)) {
+            response = {
+                "attachment": {
+                    "type": "image",
+                    "payload": {
+                        "url": "https://i.imgflip.com/1uiqz4.jpg",
+                        "is_reusable": true
+                    }
+                },
+                "quick_replies": [
+                    {
+                        "content_type": "text",
+                        "title": "Every half hour",
+                        "payload": "Every half hour",
+                        "image_url": ""
                     },
-                    "quick_replies": [
-                        {
-                            "content_type": "text",
-                            "title": "Every half hour",
-                            "payload": "Every half hour",
-                            "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
-                            "title": "Twice a day",
-                            "payload": "Twice a day",
-                            "image_url": ""
-                        },
-                        {
-                            "content_type": "text",
-                            "title": "Stop reminders",
-                            "payload": "Stop reminders",
-                            "image_url": ""
-                        }
-                    ]
-                };
-            }
+                    {
+                        "content_type": "text",
+                        "title": "Twice a day",
+                        "payload": "Twice a day",
+                        "image_url": ""
+                    }
+                ]
+            };
 
             sendTextMessage(sender_psid, response);
         }
@@ -357,8 +300,8 @@ exports.postWebhook = (req, res, next) => {
                 }
             };
 
-            sendTextMessage(recipientId, response);
             userBroker.updateUser(recipientId, interval);
+            sendTextMessage(recipientId, response);
         });
     }
 
