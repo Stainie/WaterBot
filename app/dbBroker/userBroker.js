@@ -30,13 +30,7 @@ exports.createUser = (id) => {
 
 exports.updateUser = (id, interval) => {
     let nextTime;
-    console.log('updating user: ' + interval);
-    // if (interval === -1) {
-    //     nextTime = moment().add(100, "years").toDate().toISOString();
-    // }
-    // else {
-        nextTime = moment().add(interval, "hours").toDate().toISOString();
-    // }
+    nextTime = moment().add(interval, "hours").toDate().toISOString();
 
     User.update({ facebookId: id }, {
         $set: {

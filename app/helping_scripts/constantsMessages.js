@@ -24,7 +24,7 @@ exports.isTwice = (text) => {
 };
 
 exports.isStopReminders = (text) => {
-    return text.toLowerCase() === "stop reminders";
+    return text.toLowerCase() === "no more reminders";
 };
 
 exports.hasDrank = (payload) => {

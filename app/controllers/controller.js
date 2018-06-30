@@ -66,7 +66,7 @@ exports.postWebhook = (req, res, next) => {
 
     function handleMessage(sender_psid, received_message) {
         let response;
-        
+
         if (received_message.text) {
 
             console.log("TEXT: " + received_message.text);
@@ -135,11 +135,8 @@ exports.postWebhook = (req, res, next) => {
                 setReminder(sender_psid, 24);
             }
             else if (constantMessages.isStopReminders()) {
-                console.log('WANTS TO STOP REMINDERS?');
-
-                userBroker.updateUser(sender_psid, -1);
-
-                setReminder(sender_psid, -1);
+                response = { "text": "You can always turn reminders on by typing Start and then selecting Change Alerts :)" };
+                sendTextMessage(sender_psid, response);
             }
             else {
                 response = { "text": `Sorry "${userInfo.first_name}"! I am a simple bot that is still learning. Type Start to start over` };
@@ -177,13 +174,13 @@ exports.postWebhook = (req, res, next) => {
         }
     }
 
-    
+
     function handlePostback(sender_psid, received_postback) {
         let response;
 
         let payload = received_postback.payload;
         console.log('recieved Postback: ' + payload);
-        
+
         if (constantMessages.isFirstMessage(payload)) {
 
             console.log("First message");
@@ -244,8 +241,8 @@ exports.postWebhook = (req, res, next) => {
                         },
                         {
                             "content_type": "text",
-                            "title": "Stop reminders",
-                            "payload": "Stop reminders",
+                            "title": "No more reminders",
+                            "payload": "No more reminders",
                             "image_url": ""
                         }
                     ]
@@ -320,20 +317,9 @@ exports.postWebhook = (req, res, next) => {
     }
 
     function setReminder(recipient, interval) {
-        if (interval === -1) {
-            console.log("INTERVAL IS -1");
-
-            let response;
-            response = { "text": "You can always set reminder by typing Start and then selecting change alerts" };
-            sendTextMessage(recipient, response);
-            return;
-        }
-        else {
-            setTimeout(function () {
-                checkReminder(recipient, interval);
-            }, 1000 * 18 * interval);
-        }
-        console.log("PASSED RETURN");
+        setTimeout(function () {
+            checkReminder(recipient, interval);
+        }, 1000 * 18 * interval);
     }
 
     function checkReminder(recipientId, interval) {
