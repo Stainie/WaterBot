@@ -53,7 +53,7 @@ exports.postWebhook = (req, res, next) => {
                 handleMessage(sender_psid, webhook_event.message);
             } else if (webhook_event.postback) {
                 handlePostback(sender_psid, webhook_event.postback);
-            } 
+            }
         });
 
         res.status(200).send('EVENT_RECEIVED');
@@ -70,8 +70,6 @@ exports.postWebhook = (req, res, next) => {
             console.log("TEXT: " + received_message.text);
 
             if (constantMessages.isStart(received_message.text)) {
-
-                console.log("START MESSAGE");
 
                 response = {
                     "text": "This is your menu. You can reach it by writing Menu/Help or Start 🙂",
@@ -135,6 +133,8 @@ exports.postWebhook = (req, res, next) => {
                 setReminder(sender_psid, 24);
             }
             else if (constantMessages.isStopReminders()) {
+                console.log('WANTS TO STOP REMINDERS?');
+
                 userBroker.updateUser(sender_psid, -1);
 
                 setReminder(sender_psid, -1);
@@ -172,9 +172,6 @@ exports.postWebhook = (req, res, next) => {
                 }
             };
             sendTextMessage(sender_psid, response);
-        }
-        else {
-            console.log('SOMETHING THIRD');
         }
     }
 
@@ -318,15 +315,19 @@ exports.postWebhook = (req, res, next) => {
 
     function setReminder(recipient, interval) {
         if (interval === -1) {
+            console.log("INTERVAL IS -1");
+
             let response;
             response = { "text": "You can always set reminder by typing Start and then selecting change alerts" };
             sendTextMessage(recipient, response);
             return;
         }
-
-        setTimeout(function () {
-            checkReminder(recipient, interval);
-        }, 1000 * 18 * interval);
+        else {
+            setTimeout(function () {
+                checkReminder(recipient, interval);
+            }, 1000 * 18 * interval);
+        }
+        console.log("PASSED RETURN");
     }
 
     function checkReminder(recipientId, interval) {
