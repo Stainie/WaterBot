@@ -43,6 +43,8 @@ exports.postWebhook = (req, res, next) => {
 
     if (body.object === 'page') {
 
+        console.log('trying to post');
+
         body.entry.forEach(function (entry) {
 
             let webhook_event = entry.messaging[0];
