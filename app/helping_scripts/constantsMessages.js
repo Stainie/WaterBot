@@ -12,7 +12,7 @@ exports.isAlarm = (text) => {
 };
 
 exports.isFirstMessage = (text) => {
-    return text === "GET_STARTED_PAYLOAD";
+    return text === "USER_DEFINED_PAYLOAD";
 };
 
 exports.isEveryHalfHour = (text) => {
