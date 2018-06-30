@@ -66,7 +66,7 @@ exports.postWebhook = (req, res, next) => {
 
     function handleMessage(sender_psid, received_message) {
         let response;
-
+        
         if (received_message.text) {
 
             console.log("TEXT: " + received_message.text);
@@ -182,8 +182,11 @@ exports.postWebhook = (req, res, next) => {
         let response;
 
         let payload = received_postback.payload;
-        console.log('recieved Postback');
+        console.log('recieved Postback: ' + payload);
+        
         if (constantMessages.isFirstMessage(payload)) {
+
+            console.log("First message");
 
             request({
                 "uri": 'https://graph.facebook.com/v2.6/' + sender_psid + '?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=' + ACCESS_TOKEN,
