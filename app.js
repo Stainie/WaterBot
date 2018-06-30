@@ -25,6 +25,7 @@ db.on('error', function(err){
 /* ----- Logging Errors ----- */
 app.use(morgan('dev'));
 
+
 app.use(bodyParser.urlencoded({ 'extended': false }));    // parse application/x-www-form-urlencoded (not rich data)
 app.use(bodyParser.json());                             // parse application/json from body
 

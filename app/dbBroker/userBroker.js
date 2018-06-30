@@ -27,9 +27,9 @@ exports.createUser = (id) => {
         });
 };
 
+
 exports.updateUser = (id, interval) => {
     let nextTime;
-    
     console.log('updating user: ' + interval);
     // if (interval === -1) {
     //     nextTime = moment().add(100, "years").toDate().toISOString();

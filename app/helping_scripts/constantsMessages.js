@@ -2,6 +2,7 @@ exports.isStart = (text) => {
     return text.toLowerCase() === "start" || text.toLowerCase() === "menu" || text.toLowerCase() === "help";
 };
 
+
 exports.isAbout = (text) => {
     return text.toLowerCase() === "about water bot";
 };
