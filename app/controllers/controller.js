@@ -362,9 +362,45 @@ exports.postWebhook = (req, res, next) => {
     }
 
     function sendTextMessage(recipientId, messageText) {
+        callTypingOn(recipientId);
+        callMarkSeen(recipientId);
         setTimeout(function () {
+            callTypingOff(recipientId);
             callSendAPI(recipientId, messageText);
         }, messageDelay++ * 1000);
+    }
+
+    function callTypingOn(sender_psid) {
+        let request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "sender_action": "typing_on"
+        };
+
+        sendRequest(request_body);
+    }
+
+    function callMarkSeen(sender_psid) {
+        let request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "sender_action": "mark_seen"
+        };
+
+        sendRequest(request_body);
+    }
+
+    function callTypingOff(sender_psid) {
+        let request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "sender_action": "typing_off"
+        };
+
+        sendRequest(request_body);
     }
 
     function callSendAPI(sender_psid, response) {
@@ -376,6 +412,10 @@ exports.postWebhook = (req, res, next) => {
             "message": response
         };
 
+        sendRequest(request_body);
+    }
+
+    function sendRequest(request_body) {
         request({
             "uri": "https://graph.facebook.com/v2.6/me/messages",
             "qs": { "access_token": ACCESS_TOKEN },
